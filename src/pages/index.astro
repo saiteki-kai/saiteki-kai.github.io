@@ -1,11 +1,86 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import photo from "../assets/photo.jpg";
+import { contacts, name, email } from "../data/consts";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const iconClass =
+  "text-zinc-500 transition-colors duration-200 hover:text-accent";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={`About — ${name}`}>
+  <h1 class="page-heading">About Me</h1>
+
+  <!-- Intro -->
+  <header class="flex items-center gap-7">
+    <img
+      src={photo.src}
+      alt={name}
+      class="size-32 shrink-0 rounded-full object-cover"
+    />
+
+    <div class="min-w-0">
+      <h2 class="text-3xl font-medium tracking-tight text-zinc-950">
+        {name}
+      </h2>
+
+      <p class="mt-2 text-base">
+        <a href={`mailto:${email}`} class="link-text">
+          {email}
+        </a>
+      </p>
+
+      <nav
+        aria-label="Contact and social links"
+        class="mt-4 flex items-center gap-5"
+      >
+        {
+          contacts.map(({ label, url, icon }) => (
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              class={iconClass}
+            >
+              <Icon name={icon} width="24" height="24" aria-hidden="true" />
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+  </header>
+
+  <!-- Bio -->
+  <div class="mt-12 max-w-[65ch] space-y-6 text-base leading-7 text-zinc-700">
+    <p>
+      Hi! I'm Giuseppe, a PhD student in Computer Science at the{" "}
+      <a
+        href="https://en.unimib.it/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="link-text font-bold"
+      >
+        University of Milano-Bicocca
+      </a>
+      , working on the safety of Large Language Models.
+    </p>
+
+    <p>
+      My research focuses on developing a comprehensive safety framework
+      encompassing mitigation strategies, evaluation methodologies, and
+      benchmarks to ensure safe, helpful, and high-quality outputs. A particular
+      focus is placed on the Italian landscape, where dedicated safety
+      benchmarks are currently lacking.
+    </p>
+
+    <!-- Interests -->
+    <h3 class="mb-2 text-xl font-medium tracking-tight text-zinc-950">
+      Research Interests
+    </h3>
+
+    <p>
+      AI Safety, Large Language Models, Safety Evaluation, Guardrails
+    </p>
+  </div>
 </Layout>

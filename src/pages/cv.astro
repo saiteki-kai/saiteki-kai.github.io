@@ -1,0 +1,17 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="CV">
+  <div class="mb-8 flex items-center justify-between">
+    <h1 class="page-heading mb-0">Curriculum Vitae</h1>
+  </div>
+
+  <div class="overflow-hidden rounded-xl border-2 border-zinc-200">
+    <iframe
+      src="/CV.pdf"
+      title="Curriculum Vitae"
+      class="h-[calc(100vh-10rem)] min-h-175 w-full"
+    ></iframe>
+  </div>
+</Layout>

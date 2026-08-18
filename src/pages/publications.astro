@@ -1,0 +1,37 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Publication from "../components/Publication.astro";
+import { publications } from "../data/publications";
+
+const groupedPublications = Object.entries(
+  publications.reduce<Record<number, typeof publications>>(
+    (groups, publication) => {
+      (groups[publication.year] ??= []).push(publication);
+      return groups;
+    },
+    {},
+  ),
+).sort(([yearA], [yearB]) => Number(yearB) - Number(yearA));
+---
+
+<Layout>
+  <h1 class="page-heading">Publications</h1>
+
+  <section class="space-y-12">
+    {
+      groupedPublications.map(([year, yearPublications]) => (
+        <section class="grid gap-4 sm:grid-cols-[2.5rem_1fr] sm:gap-6">
+          <h2 class="pt-0.5 text-sm font-medium tabular-nums text-zinc-500">
+            {year}
+          </h2>
+
+          <div class="space-y-6">
+            {yearPublications.map((publication) => (
+              <Publication {...publication} />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </section>
+</Layout>

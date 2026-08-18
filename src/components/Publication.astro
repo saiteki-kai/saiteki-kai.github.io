@@ -1,0 +1,207 @@
+---
+import type { Publication } from "../data/publications";
+import { name as authorName } from "../data/consts";
+
+interface Props extends Publication {}
+
+const { title, authors, venue, abstract, paperUrl, posterUrl, codeUrl } =
+  Astro.props;
+
+const previewAuthors = 3;
+const hasMoreAuthors = authors.length > previewAuthors;
+const hasActions = Boolean(paperUrl || posterUrl || codeUrl);
+
+const slug = title
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "");
+
+const authorsId = `authors-${slug}`;
+const abstractId = `abstract-${slug}`;
+---
+
+<article>
+  <!-- Title -->
+  <h2 class="text-base font-medium leading-snug tracking-tight">
+    {title}
+  </h2>
+
+  <!-- Authors -->
+  <p class="mt-1 text-sm leading-6 text-zinc-600">
+    {
+      authors.slice(0, previewAuthors).map((author, index) => (
+        <>
+          {index > 0 && ", "}
+          {author === authorName ? (
+            <strong class="font-semibold text-zinc-950">{author}</strong>
+          ) : (
+            author
+          )}
+        </>
+      ))
+    }
+
+    {
+      hasMoreAuthors && (
+        <>
+          <input id={authorsId} type="checkbox" class="peer sr-only" />
+
+          <span>, </span>
+
+          <label
+            for={authorsId}
+            class="link cursor-pointer font-medium text-zinc-600 peer-checked:hidden"
+          >
+            et al.
+          </label>
+
+          <label
+            for={authorsId}
+            class="link hidden cursor-pointer font-medium text-zinc-600 peer-checked:inline"
+          >
+            {authors.slice(previewAuthors).map((author, index) => (
+              <>
+                {index > 0 && ", "}
+                {author === authorName ? (
+                  <strong class="font-semibold text-zinc-950">{author}</strong>
+                ) : (
+                  author
+                )}
+              </>
+            ))}
+          </label>
+        </>
+      )
+    }
+  </p>
+
+  <!-- Venue -->
+  <p class="mt-1 text-sm italic leading-6 text-zinc-500">
+    {venue}
+  </p>
+
+  <!-- Links & Abstract -->
+  {
+    (hasActions || abstract) && (
+      <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+        {paperUrl && (
+          <a
+            href={paperUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link inline-flex items-center gap-1.5 font-medium text-zinc-600"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              class="h-4 w-4"
+              aria-hidden="true"
+            >
+              <path d="M14 3h7v7" />
+              <path d="M10 14 21 3" />
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+            Paper
+          </a>
+        )}
+
+        {posterUrl && (
+          <a
+            href={posterUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link inline-flex items-center gap-1.5 font-medium text-zinc-600"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              class="h-4 w-4"
+              aria-hidden="true"
+            >
+              <rect x="4" y="3" width="16" height="18" rx="2" />
+              <path d="M8 7h8" />
+              <path d="M8 11h8" />
+              <path d="M8 15h5" />
+            </svg>
+            Poster
+          </a>
+        )}
+
+        {codeUrl && (
+          <a
+            href={codeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link inline-flex items-center gap-1.5 font-medium text-zinc-600"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              class="h-4 w-4"
+              aria-hidden="true"
+            >
+              <path d="m8 9-4 3 4 3" />
+              <path d="m16 9 4 3-4 3" />
+              <path d="m14 5-4 14" />
+            </svg>
+            Code
+          </a>
+        )}
+
+        {abstract && (
+          <>
+            <input id={abstractId} type="checkbox" class="peer sr-only" />
+
+            <label
+              for={abstractId}
+              class="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-100 px-3 py-0.5 text-sm font-medium text-zinc-600 select-none transition-colors hover:border-accent hover:bg-accent-soft hover:text-accent peer-checked:hidden"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                class="h-3.5 w-3.5"
+                aria-hidden="true"
+              >
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              Abstract
+            </label>
+
+            <label
+              for={abstractId}
+              class="hidden cursor-pointer items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-100 px-3 py-0.5 text-sm font-medium text-zinc-600 select-none transition-colors hover:border-accent hover:bg-accent-soft hover:text-accent peer-checked:inline-flex"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                class="h-3.5 w-3.5"
+                aria-hidden="true"
+              >
+                <path d="m9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                <path d="m6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
+                <line x1="2" x2="22" y1="2" y2="22" />
+                <path d="m9.88 9.88a3 3 0 1 0 4.24 4.24" />
+              </svg>
+              Abstract
+            </label>
+
+            <p class="basis-full hidden text-sm leading-6 text-zinc-700 peer-checked:block">
+              {abstract}
+            </p>
+          </>
+        )}
+      </div>
+    )
+  }
+</article>
